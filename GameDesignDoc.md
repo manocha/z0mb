@@ -1,89 +1,56 @@
-# Game Design Document
-This is a place holder for your game design document. You are advised to write your document in [Markdown](http://daringfireball.net/projects/markdown/) and the following section will show you how to write a document using Markdown markup.
+#Game Design Document
 
-Alternativley, you can write your document in plain text if you wish.
-
-----
-
-## Markdown
-Markdown is a human-readable structured plain text format that is used to convert text into HTML. GitHub automatically renders Markdown into HTML.
-
-This is a crash course on how to use Markdown. The following section will show you the plain text used to generate the document shown in the rendering section.
-
-### Code
-
-```
-# Header 1
-## Header 2
-### Header 3
-#### Header 4
-##### Header 5
-
-You can also write in **bold** or _italics_. You can also ~~strike through~~ or write inline `Code Segments`
-
->Blockquotes are done as such.
-
-Just make sure to separate paragraphs with an emptyline. 
-Otherwise, they are considered in the same paragraph.
-
-You link to [Google](https://www.google.com) as such and lists are written has follows:
-  1. First you indent with two empty spaces.
-  1. Then, you use:
-    * `1.` to signal an ordered (i.e. numbered) list, or
-    * `*`, `-`, `+` to represent an unordered list.
-      1. Make sure to maintain indentation
-      1. As it is used to identify sub-lists
-  1. Numbering and symboles don't matter as they are auto-generated later.
-
-Tables are pretty easy to make:
-
-| Tables        | Are           | Easy          |
-| ------------- |:-------------:| -------------:|
-| left-aligned  | centered      | right-aligned |
-| header are    | bolded and    | centered      |
-| zebra stripes | are neat      | 1             |
-
-
-Images are added inline by using the following syntax
-![alt text](http://octodex.github.com/images/Professortocat_v2.png "Image Title")
-```
+I am trying to create a top-down zombie survival game.
 
 ----
 
-### Rendering
-This section shows the rendering of the plain text above.
+##Objects
 
-# Header 1
-## Header 2
-### Header 3
-#### Header 4
-##### Header 5
+In this game, I will have five main moving "things":
 
-You can also write in **bold** or _italics_. You can also ~~strike through~~ or write inline `Code Segments`
+###The Player
+This is the main character that is controlled by the user.
+Piloted with WASD and the arrow keys, this character can shoot zombies coming from all directions.
+Looks like a normal human from the top-down view.
 
->Blockquotes are done as such.
+###The Player's Bullets
+These independently travelling entities come from the player's gun. After being shot in one direction, they do not change velocity.
+They are destroyed after either a certain timeout duration or after they are off-screen.
+Just look like bullets
 
-Just make sure to separate paragraphs with an emptyline. 
-Otherwise, they are considered in the same paragraph.
+###The Player's Burst Attack
+???
 
-You link to [Google](https://www.google.com) as such and lists are written has follows:
-  1. First you indent with two empty spaces.
-  1. Then, you use:
-    * `1.` to signal an ordered (i.e. numbered) list, or
-    * `*`, `-`, `+` to represent an unordered list.
-      1. Make sure to maintain indentation
-      1. As it is used to identify sub-lists
-  1. Numbering and symboles don't matter as they are auto-generated later.
+###The Main Crawler Zombie
+The main enemy the main character will be facing. This zombie will spawn at a side of the screen, at either the character's x or y location.
+They will then proceed to move in one direction (similar to the bullet), and will either stop at a certain point in the screen or run off-screen.
+They will be destroyed either by the player or at the edge of the screen.
 
-Tables are pretty easy to make:
+###The Follower Zombie
+This upgraded level zombie will spawn at a random position off-screen, and then will proceed to move in the direction of the player.
+Their x and y velocities will just be determined by the direction of the player and their speed multiplier.
 
-| Tables        | Are           | Easy          |
-| ------------- |:-------------:| -------------:|
-| left-aligned  | centered      | right-aligned |
-| header are    | bolded and    | centered      |
-| zebra stripes | are neat      | 1             |
+##Control
 
+In this game, I will controlling my character with the keyboard exclusively.
+The "WASD" keys will be used to move the character around, and the arrow keys will be used to face the character and shoot in a certain direction.
+The main character will also be able to execute a burst attack with the space bar to clear the screen of zombies everytime the player's score reaches a certain point (~every ten points).
 
-Images are added inline by using the following syntax
-![alt text](http://octodex.github.com/images/Professortocat_v2.png "Image Title")
+##Score
 
+The player gains score based on how many zombies are killed. Every main zombie that is killed will each give 1 point to the player.
+Every special zombie that is killed (the follower zombie) wil give the player 2 points. The score does not go down at any point.
+
+(Might include multiplier)
+
+##Lives
+
+Players' lives are shown in a corner of the screen.
+Players each start with three lives, which are lost when they are hit by or when they hit a zombie.
+Each time a player is hit, this will clear the screen of zombies, reset
+
+##Layout
+
+The MainWindow view will show the game in a large CanvasView, and a right-side dock will include the start button, the score, and the lives count.
+This dock will also include a temporary output box used to debug the game.
+![layout](https://www.evernote.com/shard/s20/res/54e22c87-db91-44c5-ad07-321e4136160c/Snapshot_1.jpg?resizeSmall&width=859 "layout")
