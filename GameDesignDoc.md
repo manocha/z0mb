@@ -18,8 +18,8 @@ These independently travelling entities come from the player's gun. After being 
 They are destroyed after either a certain timeout duration or after they are off-screen.
 Just look like bullets
 
-###The Player's Burst Attack
-???
+###The Environment
+Stationary Blocks and a background image.
 
 ###The Main Crawler Zombie
 The main enemy the main character will be facing. This zombie will spawn at a side of the screen, at either the character's x or y location.
