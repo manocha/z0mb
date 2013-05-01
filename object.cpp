@@ -12,6 +12,7 @@ int Object::yVel() const { return yVel_; }
 void Object::yVel(int _y) { yVel_ = _y; }
 void Object::vel(int _x, int _y) { xVel_ = _x; yVel_ = _y; }
 
+//ugly hittest function (very slow? probably)
 bool Object::hit(Object* _obj) {
 	if(x()-this->boundingRect().width()/2 > _obj->x()-_obj->boundingRect().width()/2
 	&& x()-this->boundingRect().width()/2 < _obj->x()+_obj->boundingRect().width()/2) {

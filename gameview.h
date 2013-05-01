@@ -17,6 +17,7 @@ class MainWindow;
 
 class GameView : public QGraphicsView {
 	Q_OBJECT
+	friend class MainWindow;
     
 public:
 	explicit GameView(MainWindow*);

@@ -6,6 +6,8 @@
 #include "object.h"
 //#include "bullet.h"
 
+#define MAX_PLAYER_LIVES 4
+
 class Player : public Object {
 public:
 	Player();
@@ -13,14 +15,18 @@ public:
 	/*
 	shoot();
 	burstAttack();
-	die();
 	*/
 	
+	int getLives() const;
+	void resetLives();
 	int getSpeed() const;
 	void setSpeed(int);
 	
 	void control(bool down, QKeyEvent*);
 	void update();
+
+	bool dead();
+	void die();
 
 private:
 	//Bullet *bullets; ???

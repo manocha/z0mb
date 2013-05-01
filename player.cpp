@@ -1,10 +1,12 @@
 #include "player.h"
 
 Player::Player() : Object("res/player.png") {
-	lives = 3;
+	lives = MAX_PLAYER_LIVES;
 	playerSpeed = 0;
 }
 
+int Player::getLives() const { return lives-1; }
+void Player::resetLives() { lives = MAX_PLAYER_LIVES; }
 int Player::getSpeed() const { return playerSpeed; }
 void Player::setSpeed(int _speed) { playerSpeed = _speed; }
 
@@ -32,4 +34,12 @@ void Player::control(bool _down, QKeyEvent *_event) {
 
 void Player::update() {
 	setPos(x()+xVel(), y()+yVel());
+}
+
+bool Player::dead() {
+	return(lives <= 0);
+}
+void Player::die() {
+	if(lives > 0)
+		lives--;
 }

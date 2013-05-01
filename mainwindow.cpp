@@ -19,6 +19,7 @@ void MainWindow::setStatus(const QString& _txt) {
 void MainWindow::start() {
 	QString tmp = menu->getName();
 	if(tmp != NULL) {
+		view->player->resetLives();
 		view->start();
 		setStatus("welcome to z0mb, " + tmp);
 	} else {

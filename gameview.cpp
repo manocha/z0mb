@@ -3,10 +3,16 @@
 
 void GameView::handleTimer() {
 	player->update();
-	if(player->hit(obj))
-		parent->setStatus("colliding");
-	else
-		parent->setStatus("not colliding");
+	if(player->hit(obj)) {
+		player->die();
+		player->setPos(WINDOW_MAX_X/2, WINDOW_MAX_Y/2);
+		if(player->dead()) {
+			parent->setStatus(parent->menu->getName() + " dead");
+			timer->stop();
+		}
+		else parent->setStatus(parent->menu->getName() + " has " + QString::number(player->getLives()) + " live(s) left");
+		sleep(1);
+	}
 }
 
 GameView::GameView(MainWindow *_par) {
@@ -20,6 +26,7 @@ GameView::GameView(MainWindow *_par) {
 
 	obj = new Object("res/crawler.png");
 	obj->setPos(50, 50);
+	scene->addItem(obj);
 	
 	player = new Player();
 	scene->addItem(player);
@@ -32,8 +39,7 @@ GameView::GameView(MainWindow *_par) {
 }
 
 void GameView::start() {
-	timer->start();
-	scene->addItem(obj);
+	if(!player->dead()) timer->start();
 }
 
 void GameView::show() {
