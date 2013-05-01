@@ -19,7 +19,7 @@ void MainWindow::setStatus(const QString& _txt) {
 void MainWindow::start() {
 	QString tmp = menu->getName();
 	if(tmp != NULL) {
-		//view->start();
+		view->start();
 		setStatus("welcome to z0mb, " + tmp);
 	} else {
 		setStatus("err - plz enter valid player name");

@@ -4,7 +4,7 @@
 #include <QGraphicsView>
 #include <QGraphicsScene>
 
-//#include "object.h"
+#include "object.h"
 
 class MainWindow;
 
@@ -15,16 +15,19 @@ class GameView : public QGraphicsView {
 	Q_OBJECT
     
 public:
-    explicit GameView(MainWindow*);
-    ~GameView();
+	explicit GameView(MainWindow*);
+	~GameView();
 
-    void show();
+	void start();
+	void show();
     
 private:
 	QGraphicsScene *scene;
 	MainWindow *parent;
 
 	int score;
+	Object *obj;
+	
 	//Player player;
 	//Zombie *zombies;
 	//Object *objects;
