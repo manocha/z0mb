@@ -16,6 +16,8 @@ public:
 	
 	bool hit(Object*);
 	
+	void update();
+	
 private:
 	int xVel_, yVel_;
 };

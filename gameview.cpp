@@ -1,18 +1,54 @@
+#include <iostream>
+
 #include "mainwindow.h"
 #include "gameview.h"
 
 void GameView::handleTimer() {
 	player->update();
-	if(player->hit(obj)) {
-		player->die();
-		player->setPos(WINDOW_MAX_X/2, WINDOW_MAX_Y/2);
-		if(player->dead()) {
-			parent->setStatus(parent->menu->getName() + " dead");
-			timer->stop();
+	for(int i = 0; i < zombies.size(); i++) {
+		zombies[i]->update();
+		if(player->hit(zombies[i])) {
+			player->die();
+			zombies.clear();
+			player->setPos(WINDOW_MAX_X/2, WINDOW_MAX_Y/2);
+			if(player->dead()) {
+				parent->setStatus(parent->menu->getName() + " dead");
+				timer->stop();
+				spawnTimer->stop();
+			}
+			else parent->setStatus(parent->menu->getName() + " has "
+				+ QString::number(player->getLives()) + " live(s) left");
+			sleep(1);
 		}
-		else parent->setStatus(parent->menu->getName() + " has " + QString::number(player->getLives()) + " live(s) left");
-		sleep(1);
+		if(zombies[i]->dead()) {
+			scene->removeItem(zombies[i]);
+			delete zombies[i];
+			zombies.erase(zombies.begin()+i);
+			scene->clear();
+			i--;
+			
+			std::cout << "removing" << std::endl;
+		}
 	}
+	/*
+	if(player->hit(coin)) {
+	//increment score
+	}
+	*/
+}
+
+int random(int a, int b) {
+	srand(time(NULL));
+	return (rand()%(b-a))+a;
+}
+
+void GameView::spawnZombies() {
+	int tmp = random(1, 5);
+	if(tmp == 3)
+		zombies.push_back(new Follower);
+	else
+		zombies.push_back(new Crawler);
+	scene->addItem(zombies.back());
 }
 
 GameView::GameView(MainWindow *_par) {
@@ -24,8 +60,7 @@ GameView::GameView(MainWindow *_par) {
 
 	setMinimumSize(WINDOW_MAX_X+2, WINDOW_MAX_Y+2);
 
-	obj = new Object("res/crawler.png");
-	obj->setPos(50, 50);
+	obj = new Crawler();
 	scene->addItem(obj);
 	
 	player = new Player();
@@ -36,10 +71,17 @@ GameView::GameView(MainWindow *_par) {
 	timer = new QTimer(this);
 	timer->setInterval(20);
 	connect(timer, SIGNAL(timeout()), this, SLOT(handleTimer()));
+	
+	spawnTimer = new QTimer(this);
+	spawnTimer->setInterval(1000);
+	connect(spawnTimer, SIGNAL(timeout()), this, SLOT(spawnZombies()));
 }
 
 void GameView::start() {
-	if(!player->dead()) timer->start();
+	if(!player->dead()) {
+		timer->start();
+		spawnTimer->start();
+	}
 }
 
 void GameView::show() {

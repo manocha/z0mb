@@ -39,3 +39,7 @@ bool Object::hit(Object* _obj) {
 	
 	return false;
 }
+
+void Object::update() {
+	setPos(x()+xVel(), y()+yVel());
+}

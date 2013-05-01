@@ -9,6 +9,7 @@
 
 #include "object.h"
 #include "player.h"
+#include "zombie.h"
 
 class MainWindow;
 
@@ -31,18 +32,20 @@ public:
 
 private:
 	QGraphicsScene *scene;
-	QTimer *timer;
+	QTimer *timer, *spawnTimer;
 	MainWindow *parent;
 
 	int score;
 	
-	Object *obj;
+	std::vector<Zombie*> zombies;
+	Zombie *obj;
 	Player *player;
 	//Zombie *zombies;
 	//Object *objects;
 
 public slots:
 	void handleTimer();
+	void spawnZombies();
 };
 
 #endif

@@ -23,7 +23,6 @@ public:
 	void setSpeed(int);
 	
 	void control(bool down, QKeyEvent*);
-	void update();
 
 	bool dead();
 	void die();

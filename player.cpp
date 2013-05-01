@@ -32,10 +32,6 @@ void Player::control(bool _down, QKeyEvent *_event) {
 	}
 }
 
-void Player::update() {
-	setPos(x()+xVel(), y()+yVel());
-}
-
 bool Player::dead() {
 	return(lives <= 0);
 }
