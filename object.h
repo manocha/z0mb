@@ -7,15 +7,17 @@
 class Object : public QGraphicsPixmapItem {
 public:
 	Object(const std::string &fn);
-	//~Object();
-
-	//void draw();
-
+	
+	int xVel() const;
+	void xVel(int);
+	int yVel() const;
+	void yVel(int);
+	void vel(int, int);
+	
+	bool hit(Object*);
+	
 private:
-/*
-	float x, y;
-	float w, h;
-*/
+	int xVel_, yVel_;
 };
 
 #endif

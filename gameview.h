@@ -1,10 +1,14 @@
 #ifndef GAMEVIEW_H
 #define GAMEVIEW_H
 
+#include <vector>
 #include <QGraphicsView>
 #include <QGraphicsScene>
+#include <QTimer>
+#include <QKeyEvent>
 
 #include "object.h"
+#include "player.h"
 
 class MainWindow;
 
@@ -20,17 +24,24 @@ public:
 
 	void start();
 	void show();
-    
+	
+	void keyPressEvent(QKeyEvent*);
+	void keyReleaseEvent(QKeyEvent*);
+
 private:
 	QGraphicsScene *scene;
+	QTimer *timer;
 	MainWindow *parent;
 
 	int score;
-	Object *obj;
 	
-	//Player player;
+	Object *obj;
+	Player *player;
 	//Zombie *zombies;
 	//Object *objects;
+
+public slots:
+	void handleTimer();
 };
 
 #endif
