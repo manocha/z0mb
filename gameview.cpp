@@ -44,7 +44,7 @@ void GameView::handleTimer() {
 			objects.erase(objects.begin()+i);
 			//update score
 			score++;
-			std::cout << score << std::endl;
+			txt->setText(parent->menu->getName() + ": " + QString::number(score));
 			//add new coin
 			objects.push_back(new Coin());
 			scene->addItem(objects.back());
@@ -64,19 +64,22 @@ void GameView::spawnZombies() {
 ///*CONSTRUCTORS AND INITIALIZERS*///
 
 GameView::GameView(MainWindow *_par) : score(0) {
-	parent = _par;
+	parent = _par; //init
 
+	//scene & size
 	scene = new QGraphicsScene();
 	setScene(scene);
 	setSceneRect(0, 0, WINDOW_MAX_X, WINDOW_MAX_Y);
 
 	setMinimumSize(WINDOW_MAX_X+2, WINDOW_MAX_Y+2);
 
+	//player
 	player = new Player();
 	scene->addItem(player);
 	player->setPos(WINDOW_MAX_X/2, WINDOW_MAX_Y/2);
 	player->setSpeed(3);
 	
+	//timers
 	timer = new QTimer(this);
 	timer->setInterval(20);
 	connect(timer, SIGNAL(timeout()), this, SLOT(handleTimer()));
@@ -85,8 +88,14 @@ GameView::GameView(MainWindow *_par) : score(0) {
 	spawnTimer->setInterval(1000);
 	connect(spawnTimer, SIGNAL(timeout()), this, SLOT(spawnZombies()));
 	
+	//init objs
 	objects.push_back(new Coin());
 	scene->addItem(objects.back());
+	
+	//init score
+	txt = new QGraphicsSimpleTextItem("-");
+	txt->setPos(10, 10);
+	scene->addItem(txt);
 }
 
 void GameView::start() {
@@ -96,6 +105,8 @@ void GameView::start() {
 	
 	timer->start();
 	spawnTimer->start();
+	
+	txt->setText(parent->menu->getName() + ": " + QString::number(score));
 }
 
 void GameView::show() {
@@ -132,8 +143,8 @@ void GameView::keyReleaseEvent(QKeyEvent *_event) {
 ///*DESTRUCTOR*///
 
 GameView::~GameView() {
-	timer->stop();
-	delete timer;
+	timer->stop(); delete timer;
+	spawnTimer->stop(); delete spawnTimer;
 	emptyZombies();
 	emptyObjects();
 	delete player;

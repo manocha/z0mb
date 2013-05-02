@@ -37,7 +37,8 @@ private:
 	QGraphicsScene *scene;
 	QTimer *timer, *spawnTimer;
 	MainWindow *parent;
-
+	
+   QGraphicsSimpleTextItem *txt;
 	int score;
 	
 	std::vector<Zombie*> zombies;
