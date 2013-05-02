@@ -14,6 +14,10 @@ void Object::vel(int _x, int _y) { xVel_ = _x; yVel_ = _y; }
 
 //ugly hittest function (very slow? probably)
 bool Object::hit(Object* _obj) {
+	return hit_(_obj) || _obj->hit_(this);
+}
+
+bool Object::hit_(Object* _obj) {
 	if(x()-this->boundingRect().width()/2 > _obj->x()-_obj->boundingRect().width()/2
 	&& x()-this->boundingRect().width()/2 < _obj->x()+_obj->boundingRect().width()/2) {
 		if(y()-this->boundingRect().height()/2 > _obj->y()-_obj->boundingRect().height()/2
