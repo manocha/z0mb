@@ -90,10 +90,12 @@ GameView::GameView(MainWindow *_par) : score(0) {
 }
 
 void GameView::start() {
-	if(!player->dead()) {
-		timer->start();
-		spawnTimer->start();
-	}
+	emptyZombies();
+	player->setPos(WINDOW_MAX_X/2, WINDOW_MAX_Y/2);
+	score = 0;
+	
+	timer->start();
+	spawnTimer->start();
 }
 
 void GameView::show() {
