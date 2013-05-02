@@ -27,6 +27,9 @@ public:
 	void start();
 	void show();
 	
+	void emptyZombies();
+	void emptyObjects();
+	
 	void keyPressEvent(QKeyEvent*);
 	void keyReleaseEvent(QKeyEvent*);
 
@@ -38,10 +41,8 @@ private:
 	int score;
 	
 	std::vector<Zombie*> zombies;
-	Zombie *obj;
 	Player *player;
-	//Zombie *zombies;
-	//Object *objects;
+	std::vector<Object*> objects;
 
 public slots:
 	void handleTimer();

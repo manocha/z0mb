@@ -1,15 +1,21 @@
-#include <iostream>
-
 #include "mainwindow.h"
 #include "gameview.h"
+#include "globals.h"
+#include "environment.h"
+
+///*SLOTS*///
 
 void GameView::handleTimer() {
+	//update player
 	player->update();
-	for(int i = 0; i < zombies.size(); i++) {
+	//update zombies
+	for(unsigned int i = 0; i < zombies.size(); i++) {
 		zombies[i]->update();
+		//check zombies interaction with player
 		if(player->hit(zombies[i])) {
-			player->die();
-			zombies.clear();
+			player->die(); //kill player
+			//reset
+			emptyZombies();
 			player->setPos(WINDOW_MAX_X/2, WINDOW_MAX_Y/2);
 			if(player->dead()) {
 				parent->setStatus(parent->menu->getName() + " dead");
@@ -19,39 +25,45 @@ void GameView::handleTimer() {
 			else parent->setStatus(parent->menu->getName() + " has "
 				+ QString::number(player->getLives()) + " live(s) left");
 			sleep(1);
+			break;
 		}
+		//check zombie state
 		if(zombies[i]->dead()) {
 			scene->removeItem(zombies[i]);
 			delete zombies[i];
 			zombies.erase(zombies.begin()+i);
-			scene->clear();
 			i--;
-			
-			std::cout << "removing" << std::endl;
 		}
 	}
-	/*
-	if(player->hit(coin)) {
-	//increment score
+	//update coins
+	for(unsigned int i = 0; i < objects.size(); i++) {
+		if(player->hit(objects[i])) {
+			//remove coin
+			scene->removeItem(objects[i]);
+			delete objects[i];
+			objects.erase(objects.begin()+i);
+			//update score
+			score++;
+			std::cout << score << std::endl;
+			//add new coin
+			objects.push_back(new Coin());
+			scene->addItem(objects.back());
+		}
 	}
-	*/
-}
-
-int random(int a, int b) {
-	srand(time(NULL));
-	return (rand()%(b-a))+a;
 }
 
 void GameView::spawnZombies() {
 	int tmp = random(1, 5);
 	if(tmp == 3)
-		zombies.push_back(new Follower);
+		zombies.push_back(new Follower(player));
 	else
 		zombies.push_back(new Crawler);
 	scene->addItem(zombies.back());
 }
 
-GameView::GameView(MainWindow *_par) {
+///*CONSTRUCTORS AND INITIALIZERS*///
+
+GameView::GameView(MainWindow *_par) : score(0) {
 	parent = _par;
 
 	scene = new QGraphicsScene();
@@ -60,9 +72,6 @@ GameView::GameView(MainWindow *_par) {
 
 	setMinimumSize(WINDOW_MAX_X+2, WINDOW_MAX_Y+2);
 
-	obj = new Crawler();
-	scene->addItem(obj);
-	
 	player = new Player();
 	scene->addItem(player);
 	player->setPos(WINDOW_MAX_X/2, WINDOW_MAX_Y/2);
@@ -75,6 +84,9 @@ GameView::GameView(MainWindow *_par) {
 	spawnTimer = new QTimer(this);
 	spawnTimer->setInterval(1000);
 	connect(spawnTimer, SIGNAL(timeout()), this, SLOT(spawnZombies()));
+	
+	objects.push_back(new Coin());
+	scene->addItem(objects.back());
 }
 
 void GameView::start() {
@@ -88,6 +100,26 @@ void GameView::show() {
 	QGraphicsView::show();
 }
 
+///*FUNCTIONS WITH A FUNCTION*///
+
+void GameView::emptyZombies() {
+	for(int i = zombies.size()-1; i >= 0; i--) {
+		scene->removeItem(zombies[i]);
+		delete zombies[i];
+		zombies.erase(zombies.begin()+i);
+	}
+}
+
+void GameView::emptyObjects() {
+	for(int i = objects.size()-1; i >= 0; i--) {
+		scene->removeItem(objects[i]);
+		delete objects[i];
+		objects.erase(objects.begin()+i);
+	}
+}
+
+///*EVENTS*///
+
 void GameView::keyPressEvent(QKeyEvent *_event) {
 	player->control(true, _event);
 }
@@ -95,10 +127,13 @@ void GameView::keyReleaseEvent(QKeyEvent *_event) {
 	player->control(false, _event);
 }
 
+///*DESTRUCTOR*///
+
 GameView::~GameView() {
 	timer->stop();
 	delete timer;
-	delete obj;
+	emptyZombies();
+	emptyObjects();
 	delete player;
 	delete scene;
 }

@@ -16,7 +16,7 @@ public:
 	
 	bool hit(Object*);
 	
-	void update();
+	virtual void update();
 	
 private:
 	int xVel_, yVel_;

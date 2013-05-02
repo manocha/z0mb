@@ -2,6 +2,7 @@
 #define ZOMBIE_H
 
 #include "object.h"
+#include "player.h"
 
 class Zombie : public Object {
 public:
@@ -20,10 +21,10 @@ struct Crawler : public Zombie {
 
 class Follower : public Zombie {
 public:
-	Follower();
-	//moveInPlayerDirection();
-
+	Follower(Player*);
+	void update();
 private:
+	Player *p_;
 };
 
 #endif
