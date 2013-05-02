@@ -18,6 +18,10 @@ public:
 	
 	virtual void update();
 	
+	///fffuuu
+	virtual bool dead() {}
+	virtual char getType() {}
+	
 private:
 	bool hit_(Object*);
 	int xVel_, yVel_;

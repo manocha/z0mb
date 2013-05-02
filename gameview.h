@@ -19,6 +19,7 @@ class MainWindow;
 class GameView : public QGraphicsView {
 	Q_OBJECT
 	friend class MainWindow;
+	friend class Player;
     
 public:
 	explicit GameView(MainWindow*);
@@ -27,13 +28,13 @@ public:
 	void start();
 	void show();
 	
-	void emptyZombies();
-	void emptyObjects();
-	
 	void keyPressEvent(QKeyEvent*);
 	void keyReleaseEvent(QKeyEvent*);
 
 private:
+	void emptyZombies();
+	void emptyObjects();
+
 	QGraphicsScene *scene;
 	QTimer *timer, *spawnTimer;
 	MainWindow *parent;

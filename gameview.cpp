@@ -21,11 +21,28 @@ void GameView::handleTimer() {
 				parent->setStatus(parent->menu->getName() + " dead");
 				timer->stop();
 				spawnTimer->stop();
+				//clear power-ups+coins, put new coin
+				emptyObjects();
+				objects.push_back(new Coin);
+				scene->addItem(objects.back());
 			}
 			else parent->setStatus(parent->menu->getName() + " has "
 				+ QString::number(player->getLives()) + " live(s) left");
 			sleep(1);
 			break;
+		}
+		//check zombies interaction with player bullets
+		for(int j = player->bullets.size()-1; j >= 0; j--) {
+			if(player->bullets[j]->hit(zombies[i])) {
+				//remove bullet
+				scene->removeItem(player->bullets[j]);
+				delete player->bullets[j];
+				player->bullets.erase(player->bullets.begin()+j);
+				//kill zombie
+				zombies[i]->die();
+				//incr score
+				score++;
+			}
 		}
 		//check zombie state
 		if(zombies[i]->dead()) {
@@ -37,27 +54,47 @@ void GameView::handleTimer() {
 	}
 	//update coins
 	for(unsigned int i = 0; i < objects.size(); i++) {
-		if(player->hit(objects[i])) {
-			//remove coin
-			scene->removeItem(objects[i]);
-			delete objects[i];
-			objects.erase(objects.begin()+i);
-			//update score
-			score++;
-			txt->setText(parent->menu->getName() + ": " + QString::number(score));
-			//add new coin
-			objects.push_back(new Coin());
-			scene->addItem(objects.back());
+		objects[i]->update();
+		
+		if(objects[i]->getType() == 'c') {
+			if(player->hit(objects[i])) {
+				//remove coin
+				scene->removeItem(objects[i]);
+				delete objects[i];
+				objects.erase(objects.begin()+i);
+				//update score
+				score += 2;
+				//add new coin
+				objects.push_back(new Coin());
+				scene->addItem(objects.back());
+			}
+		}
+		else if(objects[i]->getType() == 'm') {
+			for(unsigned int j = 0; j < zombies.size(); j++) {
+				if(objects[i]->hit(zombies[j])) {
+					zombies[j]->die();
+					score++;
+				}
+			}
+			
+			if(objects[i]->dead()) {
+				scene->removeItem(objects[i]);
+				delete objects[i];
+				objects.erase(objects.begin()+i);
+			}
 		}
 	}
+	txt->setText(parent->menu->getName() + ": " + QString::number(score));
 }
 
 void GameView::spawnZombies() {
-	int tmp = random(1, 5);
-	if(tmp == 3)
-		zombies.push_back(new Follower(player));
-	else
-		zombies.push_back(new Crawler);
+	if(score < 50) {
+		int tmp = random(0, 6-(score/10));
+		if(tmp == 1)
+			zombies.push_back(new Follower(player));
+		else
+			zombies.push_back(new Crawler);
+	} else zombies.push_back(new Follower(player));
 	scene->addItem(zombies.back());
 }
 
@@ -74,7 +111,7 @@ GameView::GameView(MainWindow *_par) : score(0) {
 	setMinimumSize(WINDOW_MAX_X+2, WINDOW_MAX_Y+2);
 
 	//player
-	player = new Player();
+	player = new Player(this);
 	scene->addItem(player);
 	player->setPos(WINDOW_MAX_X/2, WINDOW_MAX_Y/2);
 	player->setSpeed(3);
@@ -85,7 +122,7 @@ GameView::GameView(MainWindow *_par) : score(0) {
 	connect(timer, SIGNAL(timeout()), this, SLOT(handleTimer()));
 	
 	spawnTimer = new QTimer(this);
-	spawnTimer->setInterval(1000);
+	spawnTimer->setInterval(500);
 	connect(spawnTimer, SIGNAL(timeout()), this, SLOT(spawnZombies()));
 	
 	//init objs
@@ -138,6 +175,11 @@ void GameView::keyPressEvent(QKeyEvent *_event) {
 }
 void GameView::keyReleaseEvent(QKeyEvent *_event) {
 	player->control(false, _event);
+	if(_event->key() == Qt::Key_Space && score >= 8 && !player->dead()) {
+		score -= 8;
+		objects.push_back(new Mine(player->x(), player->y()));
+		scene->addItem(objects.back());
+	}
 }
 
 ///*DESTRUCTOR*///

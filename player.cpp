@@ -1,6 +1,8 @@
+#include "gameview.h"
 #include "player.h"
 
-Player::Player() : Object("res/player.png") {
+Player::Player(GameView *_p) : Object("res/player.png") {
+	parent = _p;
 	lives = MAX_PLAYER_LIVES;
 	playerSpeed = 0;
 }
@@ -28,6 +30,33 @@ void Player::control(bool _down, QKeyEvent *_event) {
 				if(yVel() < 0) yVel(0); break;
 			case Qt::Key_S:
 				if(yVel() > 0) yVel(0); break;
+			case Qt::Key_Up:
+			case Qt::Key_Down:
+			case Qt::Key_Left:
+			case Qt::Key_Right:
+				if(bullets.size() < MAX_PLAYER_BULLETS) {
+					if(_event->key() == Qt::Key_Left)
+						bullets.push_back(new Bullet(x(), y(), 1));
+					else if(_event->key() == Qt::Key_Up)
+						bullets.push_back(new Bullet(x(), y(), 2));
+					else if(_event->key() == Qt::Key_Right)
+						bullets.push_back(new Bullet(x(), y(), 3));
+					else if(_event->key() == Qt::Key_Down)
+						bullets.push_back(new Bullet(x(), y(), 4));
+					parent->scene->addItem(bullets.back()); break;
+				}
+		}
+	}
+}
+
+void Player::update() {
+	Object::update();
+	for(int i = bullets.size()-1; i >= 0; i--) {
+		bullets[i]->update();
+		if(bullets[i]->offstage()) {
+			parent->scene->removeItem(bullets[i]);
+			delete bullets[i];
+			bullets.erase(bullets.begin()+i);
 		}
 	}
 }
@@ -39,3 +68,16 @@ void Player::die() {
 	if(lives > 0)
 		lives--;
 }
+
+void Player::emptyBullets() {
+	for(int i = bullets.size()-1; i >= 0; i--) {
+		parent->scene->removeItem(bullets[i]);
+		delete bullets[i];
+		bullets.erase(bullets.begin()+i);
+	}
+}
+
+Player::~Player() {
+	emptyBullets();
+}
+
