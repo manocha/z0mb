@@ -9,5 +9,6 @@ bool Mine::dead() { return lifespan <= 0; }
 
 void Mine::update() {
 	Object::update();
+	setRotation(lifespan);
 	if(lifespan > 0) lifespan--;
 }
