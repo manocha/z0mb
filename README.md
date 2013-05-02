@@ -1,12 +1,12 @@
 # Game - Programming Assignments Private Repository
 ### Student Information
-  + Name: Tommy Trojan
-  + USC Email: ttrojan@usc.edu
-  + USC ID: 0123456789
+  + Name: Garv Manocha
+  + USC Email: manocha@usc.edu
+  + USC ID: 3371527954
 
 ### Game Information
-  + Game Name: myAwsomeGame
-  + Game Description: One sentence game description
+  + Game Name: z0mb
+  + Game Description: space sumo vortex zombie thriller
   + [Game Design Doc](GameDesignDoc.md)
 
 
@@ -14,11 +14,11 @@
 The grader should use the following procedure to compile and run the code:
 ```shell
 #Compile Instructions
-echo "Write command here"
+make
 #Doxygen Instructions
 echo "Write command here"
 #Command to run
-echo "Write command here"
+./game_manocha
 ```
 
 ### Screenshots -- [Optional]
