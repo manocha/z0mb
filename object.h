@@ -19,8 +19,8 @@ public:
 	virtual void update();
 	
 	///fffuuu
-	virtual bool dead() {}
-	virtual char getType() {}
+	virtual bool dead() { return true; }
+	virtual char getType() { return 'o'; }
 	
 private:
 	bool hit_(Object*);
