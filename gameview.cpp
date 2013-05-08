@@ -25,6 +25,7 @@ void GameView::handleTimer() {
 				emptyObjects();
 				objects.push_back(new Coin);
 				scene->addItem(objects.back());
+				saveScore(parent->menu->getName().toStdString(), score);
 			}
 			else parent->setStatus(parent->menu->getName() + " has "
 				+ QString::number(player->getLives()) + " live(s) left");
@@ -185,6 +186,7 @@ void GameView::keyReleaseEvent(QKeyEvent *_event) {
 ///*DESTRUCTOR*///
 
 GameView::~GameView() {
+	fs.close();
 	timer->stop(); delete timer;
 	spawnTimer->stop(); delete spawnTimer;
 	emptyZombies();
