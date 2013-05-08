@@ -27,4 +27,12 @@ private:
 	Player *p_;
 };
 
+class Avoider : public Zombie {
+public:
+	Avoider(Player*);
+	void update();
+private:
+	Player *p_;
+};
+
 #endif

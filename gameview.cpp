@@ -91,26 +91,46 @@ void GameView::handleTimer() {
 }
 
 void GameView::spawnZombies() {
-	if(score < 50) {
-		if(score < 20) {
-			zombies.push_back(new Crawler);
-		} else {
-			if(level < 1) {
-				level = 1;
-				setBackgroundBrush(QBrush(QColor(random(75, 175), random(75, 175), random(75, 175)), Qt::Dense4Pattern));
-			}
-			int tmp = random(0, 6-(score/10));
-			if(tmp == 1)
-				zombies.push_back(new Follower(player));
-			else
-				zombies.push_back(new Crawler);
+	//level 2
+	if(score >= 10 && score < 20) {
+		if(level < 1) {
+			level = 1;
+			setBackgroundBrush(QBrush(QColor(random(100, 200), random(100, 200), random(75, 175)), Qt::Dense4Pattern));
 		}
-	} else {
+	}
+	//level 3
+	if(score >= 20 && score < 40) {
 		if(level < 2) {
 			level = 2;
-			setBackgroundBrush(QBrush(QColor(random(0, 125), random(0, 125), random(0, 125)), Qt::Dense5Pattern));
+			setBackgroundBrush(QBrush(QColor(random(50, 150), random(50, 150), random(0, 125)), Qt::Dense5Pattern));
 		}
-		zombies.push_back(new Follower(player));
+	}
+	//level 4
+	if(score >= 40) {
+		if(level < 3) {
+			level = 3;
+			setBackgroundBrush(QBrush(QColor(random(0, 100), random(0, 100), random(0, 125)), Qt::Dense7Pattern));
+		}
+	}
+	
+	int tmp;
+	switch(level) {
+		case 0:
+			zombies.push_back(new Avoider(player));
+			break;
+		case 1:
+			tmp = random(0, 3);
+			if(tmp == 1) zombies.push_back(new Avoider(player));
+			else zombies.push_back(new Crawler);
+			break;
+		case 2:
+			tmp = random(0, 5);
+			if(tmp == 1) zombies.push_back(new Follower(player));
+			else zombies.push_back(new Crawler);
+			break;
+		case 3:
+			zombies.push_back(new Follower(player));
+			break;
 	}
 	scene->addItem(zombies.back());
 }
