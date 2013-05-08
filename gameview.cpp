@@ -85,23 +85,39 @@ void GameView::handleTimer() {
 			}
 		}
 	}
-	txt->setText(parent->menu->getName() + ": " + QString::number(score));
+	txt->setText(parent->menu->getName() + " // "
+				  + "lvl: " + QString::number(level+1) + " // "
+				  + "score: " + QString::number(score));
 }
 
 void GameView::spawnZombies() {
 	if(score < 50) {
-		int tmp = random(0, 6-(score/10));
-		if(tmp == 1)
-			zombies.push_back(new Follower(player));
-		else
+		if(score < 20) {
 			zombies.push_back(new Crawler);
-	} else zombies.push_back(new Follower(player));
+		} else {
+			if(level < 1) {
+				level = 1;
+				setBackgroundBrush(QBrush(QColor(random(75, 175), random(75, 175), random(75, 175)), Qt::Dense4Pattern));
+			}
+			int tmp = random(0, 6-(score/10));
+			if(tmp == 1)
+				zombies.push_back(new Follower(player));
+			else
+				zombies.push_back(new Crawler);
+		}
+	} else {
+		if(level < 2) {
+			level = 2;
+			setBackgroundBrush(QBrush(QColor(random(0, 125), random(0, 125), random(0, 125)), Qt::Dense5Pattern));
+		}
+		zombies.push_back(new Follower(player));
+	}
 	scene->addItem(zombies.back());
 }
 
 ///*CONSTRUCTORS AND INITIALIZERS*///
 
-GameView::GameView(MainWindow *_par) : score(0) {
+GameView::GameView(MainWindow *_par) : score(0), level(0) {
 	parent = _par; //init
 
 	//scene & size
@@ -140,11 +156,11 @@ void GameView::start() {
 	emptyZombies();
 	player->setPos(WINDOW_MAX_X/2, WINDOW_MAX_Y/2);
 	score = 0;
+	level = 0;
+	setBackgroundBrush(QBrush(QColor(random(155, 255), random(155, 255), random(155, 255)), Qt::Dense1Pattern));
 	
 	timer->start();
 	spawnTimer->start();
-	
-	txt->setText(parent->menu->getName() + ": " + QString::number(score));
 }
 
 void GameView::show() {

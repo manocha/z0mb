@@ -41,6 +41,7 @@ private:
 	
    QGraphicsSimpleTextItem *txt;
 	int score;
+	int level;
 	
 	std::vector<Zombie*> zombies;
 	Player *player;
