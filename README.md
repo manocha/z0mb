@@ -20,8 +20,5 @@ make
 #Doxygen Instructions
 echo "Write command here"
 #Command to run
-./game_manocha
+./z0mb
 ```
-
-### Screenshots -- [Optional]
-You can either remove this section or add screenshots if you wish.
